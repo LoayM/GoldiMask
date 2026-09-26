@@ -102,8 +102,9 @@
   h2.title em { font-style: italic; color: var(--gold); font-weight: 400; }
   p.sub { color: var(--ink2); max-width: 66ch; margin: 0 0 34px; font-size: 17px; text-wrap: pretty; }
   p.note { color: var(--muted); font-size: 13.5px; max-width: 78ch; margin: 18px 0 0; }
-  .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-  @media (max-width: 960px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 960px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 480px) { .tiles { grid-template-columns: 1fr; } }
   .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 20px 18px; display: grid; gap: 6px; align-content: start; }
   .tile .v { font-family: var(--display); font-weight: 500; font-size: 46px; line-height: 1; letter-spacing: -0.03em; color: var(--ink); font-variation-settings: "SOFT" 30; }
@@ -270,7 +271,6 @@
       <div class="tile"><div class="v">4<em>/</em>4</div><div class="l">Reasoning settings where GoldiMask has the best four-benchmark average</div><div class="s">s1K × 3 backbones, LIFT-SFT-12K × LLaDA-8B</div></div>
       <div class="tile"><div class="v"><em>+</em>8.5<span style="font-size:.55em">%</span></div><div class="l">Largest relative gain in average accuracy over the strongest baseline</div><div class="s">LLaDA-8B on LIFT-SFT-12K, GoldiMask-D vs CART</div></div>
       <div class="tile"><div class="v">16<em>–</em>21<span style="font-size:.55em">%</span></div><div class="l">Fewer decoding iterations at τ = 0.95 on GSM8K and MATH-500, accuracy within about two points</div><div class="s">all backbones, all three maximizers</div></div>
-      <div class="tile"><div class="v">2<em>+</em>1</div><div class="l">Forward passes plus one backward per step. Selection reuses the first pass's attention.</div><div class="s">vs 1 + 1 for standard SFT</div></div>
     </div>
   </div>
 </section>
@@ -327,20 +327,6 @@
       <div class="chart" id="tradeoff"></div>
     </div>
     <p class="note">Step counts are iterations of the decoder, each one forward pass over the sequence, so at fixed length they are proportional to compute. They are not wall-clock measurements. On Countdown and Sudoku the picture is mixed; the selector shows those too.</p>
-  </div>
-</section>
-
-<section class="block" id="method">
-  <div class="inner">
-    <p class="kicker">The objective</p>
-    <h2 class="title">Submodular, but not <em>monotone</em>.</h2>
-    <p class="sub">Revealing a token adds support to every target that attends to it and removes that token from the targets, so the reveal objective can go down as the reveal set grows. Plain greedy therefore carries no guarantee on it. We run four maximizers that span guarantee, determinism and cost, and report all of them; the results are consistent across them.</p>
-    <div class="cards one">
-      <div class="mcard"><h3>Four <em>maximizers</em> for max<sub>|R| = B</sub> F(R)</h3>
-        <table class="arms"><thead><tr><th>Arm</th><th>Guarantee</th><th>Determ.</th><th>Queries</th></tr></thead><tbody>
-          <tr><td>Greedy (D)</td><td>none</td><td>yes</td><td>O(nB)</td></tr><tr><td>Randomized greedy (R)</td><td>1/e, exp.</td><td>no</td><td>O(nB)</td></tr><tr><td>TwinGreedy (T)</td><td>1/4</td><td>yes</td><td>O(nB)</td></tr><tr><td>Practical 0.385 (P)</td><td>0.385, exp.</td><td>no</td><td>O(n + B²)</td></tr>
-        </tbody></table></div>
-    </div>
   </div>
 </section>
 
